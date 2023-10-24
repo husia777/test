@@ -1,6 +1,9 @@
 import asyncio
 from logging.config import fileConfig
 from src.infrastructure.database.database import Base
+from src.infrastructure.database.models.currency import CurrencyDBModel
+from src.config import SQLALCHEMY_DATABASE_URL
+
 # from src.infrastructure.database.models.user import UserDbModel, RefreshTokenDbModel
 # from src.infrastructure.database.models.article import ArticleDBModel
 from sqlalchemy import pool
@@ -16,7 +19,7 @@ from src.infrastructure.config import settings
 # access to the values within the .ini file in use.
 config = context.config
 config.set_main_option(
-    "sqlalchemy.url",  settings.sqlalchemy_database_url)
+    "sqlalchemy.url",  SQLALCHEMY_DATABASE_URL)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -48,7 +51,7 @@ def run_migrations_offline() -> None:
 
     """
     context.configure(
-        url=settings.sqlalchemy_database_url,
+        url=SQLALCHEMY_DATABASE_URL,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
