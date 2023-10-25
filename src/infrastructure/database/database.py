@@ -2,9 +2,11 @@ from sqlalchemy import NullPool
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
-from src.infrastructure.config import settings
+
+from src.config import SQLALCHEMY_DATABASE_URL
 engine = create_async_engine(
-    settings.sqlalchemy_database_url, echo=True, future=True,
+    SQLALCHEMY_DATABASE_URL
+    , echo=True, future=True,
     poolclass=NullPool,
 )
 AsyncSessionLocal = async_sessionmaker(

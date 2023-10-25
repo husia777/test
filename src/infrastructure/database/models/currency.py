@@ -10,7 +10,7 @@ class CurrencyDBModel(Base):
     __tablename__ = "currency"
     id:Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(nullable=False)
-    code: Mapped[int] = mapped_column(nullable=False)
-    exchange_rate: Mapped[int] = mapped_column(nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
+    code: Mapped[str] = mapped_column(nullable=False)
+    exchange_rate: Mapped[float] = mapped_column(nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now())

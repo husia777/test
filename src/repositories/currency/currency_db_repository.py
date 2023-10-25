@@ -1,210 +1,87 @@
 from datetime import datetime
 from fastapi import Depends
+from sqlalchemy import func, insert, select, update
 from sqlalchemy.orm import Session
 from abc import ABC, abstractmethod
 from pydantic import BaseModel
+from src.api.schemas.currencies_schema import CurrencyResponseModel, AvailableCurrencies
 from src.infrastructure.database.database import get_session
 from src.infrastructure.database.models.currency import CurrencyDBModel
 from enum import Enum
+
+
 class AbstractCurrencyUseCase(ABC):
     @abstractmethod
-    def time_of_last_update():
+    def get_last_updated_time(self):
         pass
-    
-    @abstractmethod
-    def save():
-        pass
-    
-    @abstractmethod
-    def get_all():
-        pass
-    
-    @abstractmethod
-    def get_by_id():
-        pass
-    
-class Currency(BaseModel):
-    name= str
-    code= int
-    exchange_rate= int
-    created_at= datetime
 
-class CurrencyDbRepository(AbstractCurrencyUseCase):
-    def __init__(self, session: Session = Depends(get_session)) -> None:
-        self.session = session
-    
-    async def save(self, currency= Currency):
-        self.session.add(CurrencyDBModel(name=currency.name ))
+    @abstractmethod
+    def save_all(self):
+        pass
 
-class DictionaryOfAvailableCurrencies(str, Enum):
-    AED="United Arab Emirates Dirham"
-    AFN="Afghan Afghani"
-    ALL="Albanian Lek"
-    AMD="Armenian Dram"
-    ANG="Netherlands Antillean Guilder"
-    AOA="Angolan Kwanza"
-    ARS="Argentine Peso"
-    AUD="Australian Dollar"
-    AWG="Aruban Florin"
-    AZN="Azerbaijani Manat"
-    BAM="Bosnia-Herzegovina Convertible Mark"
-    BBD="Barbadian Dollar"
-    BDT="Bangladeshi Taka"
-    BGN="Bulgarian Lev"
-    BHD="Bahraini Dinar"
-    BIF="Burundian Franc"
-    BMD="Bermudan Dollar"
-    BND="Brunei Dollar"
-    BOB="Bolivian Boliviano"
-    BRL="Brazilian Real"
-    BSD="Bahamian Dollar"
-    BTC="Bitcoin"
-    BTN="Bhutanese Ngultrum"
-    BWP="Botswanan Pula"
-    BYN="New Belarusian Ruble"
-    BYR="Belarusian Ruble"
-    BZD="Belize Dollar"
-    CAD="Canadian Dollar"
-    CDF="Congolese Franc"
-    CHF="Swiss Franc"
-    CLF="Chilean Unit of Account (UF)"
-    CLP="Chilean Peso"
-    CNY="Chinese Yuan"
-    COP="Colombian Peso"
-    CRC="Costa Rican Colon"
-    CUC="Cuban Convertible Peso"
-    CUP="Cuban Peso"
-    CVE="Cape Verdean Escudo"
-    CZK="Czech Republic Koruna"
-    DJF="Djiboutian Franc"
-    DKK="Danish Krone"
-    DOP="Dominican Peso"
-    DZD="Algerian Dinar"
-    EGP="Egyptian Pound"
-    ERN="Eritrean Nakfa"
-    ETB="Ethiopian Birr"
-    EUR="Euro"
-    FJD="Fijian Dollar"
-    FKP="Falkland Islands Pound"
-    GBP="British Pound Sterling"
-    GEL="Georgian Lari"
-    GGP="Guernsey Pound"
-    GHS="Ghanaian Cedi"
-    GIP="Gibraltar Pound"
-    GMD="Gambian Dalasi"
-    GNF="Guinean Franc"
-    GTQ="Guatemalan Quetzal"
-    GYD="Guyanaese Dollar"
-    HKD="Hong Kong Dollar"
-    HNL="Honduran Lempira"
-    HRK="Croatian Kuna"
-    HTG="Haitian Gourde"
-    HUF="Hungarian Forint"
-    IDR="Indonesian Rupiah"
-    ILS="Israeli New Sheqel"
-    IMP="Manx pound"
-    INR="Indian Rupee"
-    IQD="Iraqi Dinar"
-    IRR="Iranian Rial"
-    ISK="Icelandic Krona"
-    JEP="Jersey Pound"
-    JMD="Jamaican Dollar"
-    JOD="Jordanian Dinar"
-    JPY="Japanese Yen"
-    KES="Kenyan Shilling"
-    KGS="Kyrgystani Som"
-    KHR="Cambodian Riel"
-    KMF="Comorian Franc"
-    KPW="North Korean Won"
-    KRW="South Korean Won"
-    KWD="Kuwaiti Dinar"
-    KYD="Cayman Islands Dollar"
-    KZT="Kazakhstani Tenge"
-    LAK="Laotian Kip"
-    LBP="Lebanese Pound"
-    LKR="Sri Lankan Rupee"
-    LRD="Liberian Dollar"
-    LSL="Lesotho Loti"
-    LTL="Lithuanian Litas"
-    LVL="Latvian Lats"
-    LYD="Libyan Dinar"
-    MAD="Moroccan Dirham"
-    MDL="Moldovan Leu"
-    MGA="Malagasy Ariary"
-    MKD="Macedonian Denar"
-    MMK="Myanma Kyat"
-    MNT="Mongolian Tugrik"
-    MOP="Macanese Pataca"
-    MRO="Mauritanian Ouguiya"
-    MUR="Mauritian Rupee"
-    MVR="Maldivian Rufiyaa"
-    MWK="Malawian Kwacha"
-    MXN="Mexican Peso"
-    MYR="Malaysian Ringgit"
-    MZN="Mozambican Metical"
-    NAD="Namibian Dollar"
-    NGN="Nigerian Naira"
-    NIO="Nicaraguan C\u00f3rdoba"
-    NOK="Norwegian Krone"
-    NPR="Nepalese Rupee"
-    NZD="New Zealand Dollar"
-    OMR="Omani Rial"
-    PAB="Panamanian Balboa"
-    PEN="Peruvian Nuevo Sol"
-    PGK="Papua New Guinean Kina"
-    PHP="Philippine Peso"
-    PKR="Pakistani Rupee"
-    PLN="Polish Zloty"
-    PYG="Paraguayan Guarani"
-    QAR="Qatari Rial"
-    RON="Romanian Leu"
-    RSD="Serbian Dinar"
-    RUB="Russian Ruble"
-    RWF="Rwandan Franc"
-    SAR="Saudi Riyal"
-    SBD="Solomon Islands Dollar"
-    SCR="Seychellois Rupee"
-    SDG="Sudanese Pound"
-    SEK="Swedish Krona"
-    SGD="Singapore Dollar"
-    SHP="Saint Helena Pound"
-    SLE="Sierra Leonean Leone"
-    SLL="Sierra Leonean Leone"
-    SOS="Somali Shilling"
-    SRD="Surinamese Dollar"
-    SSP="South Sudanese Pound"
-    STD="S\u00e3o Tom\u00e9 and Pr\u00edncipe Dobra"
-    SVC="Salvadoran Col\u00f3n"
-    SYP="Syrian Pound"
-    SZL="Swazi Lilangeni"
-    THB="Thai Baht"
-    TJS="Tajikistani Somoni"
-    TMT="Turkmenistani Manat"
-    TND="Tunisian Dinar"
-    TOP="Tongan Pa\u02bbanga"
-    TRY="Turkish Lira"
-    TTD="Trinidad and Tobago Dollar"
-    TWD="New Taiwan Dollar"
-    TZS="Tanzanian Shilling"
-    UAH="Ukrainian Hryvnia"
-    UGX="Ugandan Shilling"
-    USD="United States Dollar"
-    UYU="Uruguayan Peso"
-    UZS="Uzbekistan Som"
-    VEF="Venezuelan Bolivar Fuerte"
-    VES="Sovereign Bolivar"
-    VND="Vietnamese Dong"
-    VUV="Vanuatu Vatu"
-    WST="Samoan Tala"
-    XAF="CFA Franc BEAC"
-    XAG="Silver (troy ounce)"
-    XAU="Gold (troy ounce)"
-    XCD="East Caribbean Dollar"
-    XDR="Special Drawing Rights"
-    XOF="CFA Franc BCEAO"
-    XPF="CFP Franc"
-    YER="Yemeni Rial"
-    ZAR="South African Rand"
-    ZMK="Zambian Kwacha (pre-2013)"
-    ZMW="Zambian Kwacha"
-    ZWL="Zimbabwean Dollar"
+    @abstractmethod
+    def get_all(self):
+        pass
+
+    @abstractmethod
+    def get_by_id(self):
+        pass
+
+
+AvailableCurrencies
+
+
+class CurrencyDbRepository:
+    def __init__(self, session: Session = Depends(get_session)):
+        self.session: Session = session
+
+    async def save_all(self, currencies: CurrencyResponseModel) -> dict[str, str]:
+        query = select(func.count()).select_from(CurrencyDBModel)
+        result = await self.session.execute(query)
+        count = result.scalar()
+
+        if count == 0:
+            values = []
+            currency_rates = currencies["rates"]
+            for code, exchange_rate in currency_rates.items():
+                values.append({
+                    "name": AvailableCurrencies[code].value,
+                    "code": code,
+                    "exchange_rate": exchange_rate,
+                })
+            await self.session.execute(insert(CurrencyDBModel).values(values))
+        else:
+            currency_rates = currencies["rates"]
+            for code, exchange_rate in currency_rates.items():
+                query = update(CurrencyDBModel).where(
+                    CurrencyDBModel.code == code).values(exchange_rate=exchange_rate, updated_at=func.now())
+                await self.session.execute(query)
+
+        await self.session.commit()
+        return {"status": "ok"}
+
+    async def get_last_updated_time(self):
+        last_updated = await self.session.execute(
+            func.max(CurrencyDBModel.updated_at))
+        return last_updated.scalar()
+
+    async def get_all(self):
+        query = select(CurrencyDBModel).order_by(CurrencyDBModel.id)
+        currencies = await self.session.execute(query)
+        return currencies.scalars().all()
+
+    async def currencies_convert(self, convert_from: AvailableCurrencies, convert_to: AvailableCurrencies):
+        convert_from_in_db = await self.session.execute(
+            select(CurrencyDBModel).
+            where(CurrencyDBModel.code == convert_from.name)
+        )
+        convert_from_in_db = convert_from_in_db.scalar()
+
+        convert_to_in_db = await self.session.execute(
+            select(CurrencyDBModel).
+            where(CurrencyDBModel.code == convert_to.name)
+        )
+        convert_to_in_db = convert_to_in_db.scalar()
+
+       
+        return convert_from_in_db, convert_to_in_db
