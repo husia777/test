@@ -9,8 +9,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
-    env_file:
-      - ./backend/src/.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -35,7 +33,11 @@ services:
     ports:
       - 8080:8080
 
-    restart: unless-stopped
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s # default
+        max_attempts: 5
 
 volumes:
   postgres_data:

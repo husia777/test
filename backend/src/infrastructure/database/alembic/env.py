@@ -4,8 +4,6 @@ from src.infrastructure.database.database import Base
 from src.infrastructure.database.models.currency import CurrencyDBModel
 from src.config import SQLALCHEMY_DATABASE_URL
 
-# from src.infrastructure.database.models.user import UserDbModel, RefreshTokenDbModel
-# from src.infrastructure.database.models.article import ArticleDBModel
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config

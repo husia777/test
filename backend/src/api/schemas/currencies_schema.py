@@ -1,6 +1,4 @@
 from enum import Enum
-from locale import currency
-
 from pydantic import BaseModel
 
 
@@ -28,7 +26,7 @@ class AvailableCurrencies(str, Enum):
     BSD = "Bahamian Dollar"
     BTC = "Bitcoin"
     BTN = "Bhutanese Ngultrum"
-    BWP = "Botswanan Pula"
+    BWP = "Botswanan Pula"  
     BYN = "New Belarusian Ruble"
     BYR = "Belarusian Ruble"
     BZD = "Belize Dollar"
