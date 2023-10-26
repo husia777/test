@@ -1,4 +1,5 @@
 from datetime import datetime
+from traceback import print_tb
 from fastapi import Depends
 from sqlalchemy import func, insert, select, update
 from sqlalchemy.orm import Session
@@ -35,7 +36,7 @@ class CurrencyDbRepository:
     def __init__(self, session: Session = Depends(get_session)):
         self.session: Session = session
 
-    async def save_all(self, currencies: CurrencyResponseModel) -> dict[str, str]:
+    async def save_all(self, currencies: CurrencyResponseModel, symbols) -> dict[str, str]:
         query = select(func.count()).select_from(CurrencyDBModel)
         result = await self.session.execute(query)
         count = result.scalar()
@@ -43,9 +44,12 @@ class CurrencyDbRepository:
         if count == 0:
             values = []
             currency_rates = currencies["rates"]
+            symbols_currency = symbols["symbols"]
+            print(symbols_currency)
+            print(currency_rates)
             for code, exchange_rate in currency_rates.items():
                 values.append({
-                    "name": AvailableCurrencies[code].value,
+                    "name": symbols_currency[code],
                     "code": code,
                     "exchange_rate": exchange_rate,
                 })
