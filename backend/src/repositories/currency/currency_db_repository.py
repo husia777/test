@@ -45,8 +45,6 @@ class CurrencyDbRepository:
             values = []
             currency_rates = currencies["rates"]
             symbols_currency = symbols["symbols"]
-            print(symbols_currency)
-            print(currency_rates)
             for code, exchange_rate in currency_rates.items():
                 values.append({
                     "name": symbols_currency[code],
