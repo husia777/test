@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 import requests
-from src.config import API_FOR_SAVE_DATA
+from src.config import API_FOR_SAVE_DATA, API_GET_SYMBOLS
 from src.api.schemas.currencies_schema import AvailableCurrencies
 from src.use_cases.currency_use_case import CurrencyService
 
@@ -25,9 +25,10 @@ async def get_all_currency(currency_service: CurrencyService = Depends()):
 @router.get("/currencies/save")
 async def save_all_currencies(
     currency_service: CurrencyService = Depends(),
-) -> dict[str, str]:
+):
     data = requests.get(API_FOR_SAVE_DATA).json()
-    return await currency_service.save_all(data)
+    symbols = requests.get(API_GET_SYMBOLS).json()
+    return await currency_service.save_all(data, symbols)
 
 
 @router.get("/currencies/info")

@@ -9,8 +9,8 @@ class CurrencyService:
     def __init__(self, repository: CurrencyDbRepository = Depends()) -> None:
         self.repository: CurrencyDbRepository = repository
 
-    async def save_all(self, currencies) -> dict[str, str]:
-        return await self.repository.save_all(currencies)
+    async def save_all(self, currencies, symbols) :
+        return await self.repository.save_all(currencies, symbols)
 
     async def get_all(self):
         return await self.repository.get_all()
